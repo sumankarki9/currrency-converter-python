@@ -1,0 +1,9 @@
+{
+    "version": 2,
+    "functions": {
+      "api/currency_converter.py": {
+        "runtime": "python3.9"
+      }
+    }
+  }
+  
