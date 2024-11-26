@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Currency Converter</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 50px;
+      text-align: center;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    input, select, button {
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Currency Converter</h1>
+    <label for="conversionType">Select Conversion Type:</label>
+    <select id="conversionType">
+      <option value="usd_to_npr">USD to NPR</option>
+      <option value="npr_to_usd">NPR to USD</option>
+    </select>
+
+    <label for="amount">Enter Amount:</label>
+    <input type="number" id="amount" placeholder="Enter amount" />
+
+    <button onclick="convertCurrency()">Convert</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    async function convertCurrency() {
+      const conversionType = document.getElementById("conversionType").value;
+      const amount = document.getElementById("amount").value;
+
+      if (!amount || isNaN(amount)) {
+        alert("Please enter a valid amount.");
+        return;
+      }
+
+      try {
+        // Make a GET request to the Flask backend
+        const response = await fetch(`http://127.0.0.1:5000/convert?type=${conversionType}&amount=${amount}`);
+        
+        if (!response.ok) {
+          throw new Error("Failed to fetch data. Please try again.");
+        }
+
+        const data = await response.json();
+
+        if (data.error) {
+          document.getElementById("result").innerHTML = `<span style="color: red;">Error: ${data.error}</span>`;
+        } else {
+          const resultText = conversionType === "usd_to_npr"
+            ? `${data.USD} USD = Rs. ${data.NPR}`
+            : `${data.NPR} NPR = USD ${data.USD}`;
+          document.getElementById("result").innerText = resultText;
+        }
+      } catch (error) {
+        document.getElementById("result").innerHTML = `<span style="color: red;">${error.message}</span>`;
+      }
+    }
+  </script>
+</body>
+</html>
