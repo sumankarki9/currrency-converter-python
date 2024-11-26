@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify, send_from_directory
 from urllib.parse import quote as url_quote
+from flask_cors import CORS
+CORS(app)
 
 import os
 
