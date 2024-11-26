@@ -1,20 +1,23 @@
 from flask import Flask, request, jsonify, send_from_directory
+from urllib.parse import quote as url_quote
+
+import os
 
 app = Flask(__name__)
 
+# Serve index.html at the root URL
 @app.route('/')
 def serve_frontend():
-    return send_from_directory('.', 'index.html')
+    return send_from_directory(os.getcwd(), 'index.html')
 
-# Existing conversion logic here...
-
-
+# Currency conversion functions
 def convert_usd_to_npr(usd):
     return 135.22 * usd
 
 def convert_npr_to_usd(npr):
     return npr / 135.22
 
+# Currency conversion API endpoint
 @app.route('/convert', methods=['GET'])
 def convert():
     currency_type = request.args.get('type')  # Query parameter 'type'
